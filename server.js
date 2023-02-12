@@ -9,30 +9,37 @@ const PORT = process.env.PORT || 4001;
 app.use(express.static('public'));
 
 app.get('/api/quotes/random',(req,res)=>{
-    let randQuote = getRandomElement(quotes).quote;
-    res.send(randQuote);
+    let randQuote = getRandomElement(quotes);
+    res.send({quote:randQuote});
 })
 
 app.get('/api/quotes',(req,res)=>{
     let name = req.query.person;
     if(name){
-        let result = [];
-        for(let element of quotes){
-            if(element.person == name){
-                result.push(element.quote)
-            }
-        }
+        let result = quotes.filter(quote => quote.person === req.query.person)
         
         
         res.send({quotes:result})
 
     }else{
-        let result = []
+        
+        res.send({quotes:quotes});
+    }
+})
 
-        for(let element of quotes){
-            result.push(element.quote);
-        }
-        res.send({quotes:result});
+app.post('/api/quotes',(req,res)=>{
+    let newQuote = req.query.quote;
+    let newPerson = req.query.person;
+    let quoteObj = {
+        quote:newQuote,
+        person:newPerson
+    }
+    console.log(quoteObj)
+    if(newPerson && newQuote){
+        quotes.push(quoteObj);
+        res.send({quote:quoteObj})
+    }else{
+        res.status(400).send();
     }
 })
 app.listen(PORT)
