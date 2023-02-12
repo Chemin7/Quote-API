@@ -13,4 +13,26 @@ app.get('/api/quotes/random',(req,res)=>{
     res.send(randQuote);
 })
 
+app.get('/api/quotes',(req,res)=>{
+    let name = req.query.person;
+    if(name){
+        let result = [];
+        for(let element of quotes){
+            if(element.person == name){
+                result.push(element.quote)
+            }
+        }
+        
+        
+        res.send({quotes:result})
+
+    }else{
+        let result = []
+
+        for(let element of quotes){
+            result.push(element.quote);
+        }
+        res.send({quotes:result});
+    }
+})
 app.listen(PORT)
